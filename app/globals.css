@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  /* Anabel Pro (Zinc Dark Theme) */
+  --color-bg-primary: #09090b;
+  /* Zinc-950 */
+  --color-bg-secondary: #18181b;
+  /* Zinc-900 */
+  --color-bg-tertiary: #27272a;
+  /* Zinc-800 */
+  --color-text-primary: #f4f4f5;
+  /* Zinc-100 */
+  --color-text-secondary: #a1a1aa;
+  /* Zinc-400 */
+  --color-text-muted: #71717a;
+  /* Zinc-500 */
+  --color-accent-blue: #3b82f6;
+  --color-accent-yellow: #f59e0b;
+  --color-accent-green: #22c55e;
+  --color-accent-red: #ef4444;
+  --color-border-color: #27272a;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-primary text-text-primary min-h-screen antialiased;
+    font-family: var(--font-inter);
+  }
+}
+
+@layer components {
+  .app-shell {
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    width: 100%;
+  }
+
+  .card {
+    @apply bg-bg-secondary rounded-lg p-5 border border-border-color shadow-sm transition-colors duration-200;
+  }
+
+  .text-label {
+    @apply text-[11px] uppercase tracking-widest text-text-muted font-semibold mb-1.5 opacity-60;
+  }
+
+  .text-value {
+    @apply font-semibold text-text-primary;
+  }
+
+  /* Utility to hide scrollbars but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

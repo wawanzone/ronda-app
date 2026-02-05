@@ -1,0 +1,11 @@
+Label,Value,Description
+Uang Belum Disetor,5000000,Total uang yang ada di tangan kasir tapi belum disetor ke bank
+Uang Masuk,156000000,Total akumulasi pemasukan
+Uang Keluar,45000000,Total akumulasi pengeluaran
+Saldo,111000000,Sisa saldo saat ini
+,,
+TIPS:,,
+1. Buat Tab baru bernama "Dashboard",,
+2. Import CSV ini atau ketik manual di sel A1,,
+3. Pastikan nilai ada di Kolom B (Baris 2 sampai 5),,
+4. Copy ID Tab (GID) dari URL (#gid=123) ke .env.local bagian GOOGLE_SHEET_DASHBOARD_GID,,
