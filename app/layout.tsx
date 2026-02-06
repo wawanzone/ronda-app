@@ -9,7 +9,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Ronda Pro",
-  description: "Laporan Keuangan & Arus Kas",
+  description: "Padon RT 03-04 RW 29",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

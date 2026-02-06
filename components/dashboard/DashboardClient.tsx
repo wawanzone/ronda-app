@@ -98,8 +98,8 @@ export function DashboardClient({ data }: DashboardClientProps) {
                         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-tight sm:leading-none">
                             Ronda Pro
                         </h1>
-                        <p className="text-text-muted text-[11px] sm:text-sm tracking-tight capitalize hidden sm:block">
-                            Laporan Keuangan & Arus Kas
+                        <p className="text-text-muted text-[11px] sm:text-sm tracking-tight">
+                            Padon RT 03-04 RW 29
                         </p>
                     </div>
 
