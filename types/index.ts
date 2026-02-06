@@ -28,6 +28,16 @@ export interface YearlySummary {
     balance: number; // Saldo
 }
 
+// Transaction detail from year sheet (columns A-F)
+export interface Transaction {
+    tanggal: string;        // A: Date
+    belumDisetor: number;   // B: Unpaid amount
+    uangMasuk: number;      // C: Income
+    uangKeluar: number;     // D: Expense (filter criteria)
+    keterangan: string;     // E: Description
+    info: string;           // F: Additional info
+}
+
 export interface DashboardData {
     summary: FinanceSummary; // Legacy/Current Summary
     monthlyReport: MonthlyRecord[];

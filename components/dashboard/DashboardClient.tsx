@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { DashboardData } from "@/types";
+import { DashboardData, Transaction } from "@/types";
 import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { InteractiveChart } from "@/components/dashboard/InteractiveChart";
 import { MonthlyBreakdown } from "@/components/dashboard/MonthlyBreakdown";
+import { TransactionModal } from "@/components/dashboard/TransactionModal";
 import { Wallet, TrendingUp, TrendingDown, CreditCard, ChevronDown } from "lucide-react";
 
 interface DashboardClientProps {
@@ -22,6 +23,31 @@ export function DashboardClient({ data }: DashboardClientProps) {
 
     // State for Selected Year (Default to latest year available)
     const [selectedYear, setSelectedYear] = useState<number>(availableYears[0] || new Date().getFullYear());
+
+    // State for Transaction Modal
+    const [showTransactionModal, setShowTransactionModal] = useState(false);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [loadingTransactions, setLoadingTransactions] = useState(false);
+    const [transactionType, setTransactionType] = useState<'expense' | 'income' | 'unpaid'>('expense');
+
+    // Generic handler for fetching transactions
+    const handleTransactionClick = async (type: 'expense' | 'income' | 'unpaid') => {
+        setTransactionType(type);
+        setShowTransactionModal(true);
+        setLoadingTransactions(true);
+
+        try {
+            const response = await fetch(`/api/transactions?year=${selectedYear}&type=${type}`);
+            if (!response.ok) throw new Error('Failed to fetch transactions');
+            const data = await response.json();
+            setTransactions(data.transactions || []);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+            setTransactions([]);
+        } finally {
+            setLoadingTransactions(false);
+        }
+    };
 
     // Filter Monthly Data for Chart
     const filteredMonthlyData = useMemo(() => {
@@ -108,18 +134,21 @@ export function DashboardClient({ data }: DashboardClientProps) {
                         amount={dynamicSummary.uangBelumDisetor}
                         icon={Wallet}
                         iconClassName="text-accent-yellow"
+                        onClick={() => handleTransactionClick('unpaid')}
                     />
                     <SummaryCard
                         title="Uang Masuk"
                         amount={dynamicSummary.uangMasuk}
                         icon={TrendingUp}
                         iconClassName="text-accent-green"
+                        onClick={() => handleTransactionClick('income')}
                     />
                     <SummaryCard
                         title="Uang Keluar"
                         amount={dynamicSummary.uangKeluar}
                         icon={TrendingDown}
                         iconClassName="text-accent-red"
+                        onClick={() => handleTransactionClick('expense')}
                     />
 
                     {/* Saldo - Wider (2 cols) & Prominent */}
@@ -151,6 +180,16 @@ export function DashboardClient({ data }: DashboardClientProps) {
                     &copy; 2026 by @wawanzone
                 </p>
             </footer>
+
+            {/* Transaction Modal */}
+            <TransactionModal
+                isOpen={showTransactionModal}
+                onClose={() => setShowTransactionModal(false)}
+                transactions={transactions}
+                year={selectedYear}
+                loading={loadingTransactions}
+                type={transactionType}
+            />
         </div>
     );
 }
