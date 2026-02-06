@@ -64,13 +64,13 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                 onClick={onClose}
             />
 
-            {/* Modal */}
-            <div className="relative bg-bg-primary border border-border-color rounded-t-2xl sm:rounded-2xl w-full sm:max-w-4xl max-h-[85vh] sm:max-h-[80vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border-color">
+            {/* Modal - Fullscreen on mobile, centered on desktop */}
+            <div className="relative bg-bg-primary border border-border-color rounded-t-2xl sm:rounded-2xl w-full sm:max-w-4xl h-full sm:h-auto sm:max-h-[80vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
+                {/* Header - Compact on mobile */}
+                <div className="flex items-center justify-between p-3 sm:p-6 border-b border-border-color">
                     <div>
-                        <h2 className="text-xl sm:text-2xl font-bold text-text-primary">{title}</h2>
-                        <p className="text-sm text-text-muted mt-1">Tahun {year} • {transactions.length} transaksi</p>
+                        <h2 className="text-lg sm:text-2xl font-bold text-text-primary">{title}</h2>
+                        <p className="text-xs sm:text-sm text-text-muted mt-0.5 sm:mt-1">Tahun {year} • {transactions.length} transaksi</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -81,8 +81,8 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                     </button>
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 overflow-auto p-4 sm:p-6">
+                {/* Content - Compact padding on mobile */}
+                <div className="flex-1 overflow-auto p-2 sm:p-6">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
                             <div className="text-text-muted">Loading...</div>
@@ -92,27 +92,27 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                             <div className="text-text-muted">Tidak ada data transaksi</div>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
+                        <div className="overflow-x-auto -mx-2 sm:mx-0">
+                            <table className="w-full text-sm min-w-max">
                                 <thead className="sticky top-0 bg-bg-secondary border-b border-border-color">
                                     <tr className="text-left">
-                                        <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Tanggal</th>
-                                        {type === 'unpaid' && <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Belum Disetor</th>}
-                                        {type === 'income' && <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Masuk</th>}
-                                        {type === 'expense' && <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Keluar</th>}
-                                        <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Keterangan</th>
-                                        {type === 'expense' && <th className="px-3 py-3 font-semibold text-text-muted text-xs uppercase tracking-wider hidden sm:table-cell">Info</th>}
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Tanggal</th>
+                                        {type === 'unpaid' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Belum Disetor</th>}
+                                        {type === 'income' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Masuk</th>}
+                                        {type === 'expense' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Keluar</th>}
+                                        <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Keterangan</th>
+                                        {type === 'expense' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Info</th>}
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-border-color/50">
                                     {transactions.map((tx, idx) => (
                                         <tr key={idx} className="hover:bg-bg-secondary/50 transition-colors">
-                                            <td className="px-3 py-3 text-text-primary font-medium whitespace-nowrap">{tx.tanggal}</td>
-                                            <td className={cn("px-3 py-3 font-mono text-right whitespace-nowrap", colorClass)}>
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-primary font-medium whitespace-nowrap text-xs sm:text-sm">{tx.tanggal}</td>
+                                            <td className={cn("px-2 sm:px-3 py-2 sm:py-3 font-mono text-right whitespace-nowrap text-xs sm:text-sm", colorClass)}>
                                                 {formatNumber(tx[column] as number)}
                                             </td>
-                                            <td className="px-3 py-3 text-text-primary">{tx.keterangan}</td>
-                                            {type === 'expense' && <td className="px-3 py-3 text-text-muted hidden sm:table-cell">{tx.info}</td>}
+                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-primary text-xs sm:text-sm">{tx.keterangan}</td>
+                                            {type === 'expense' && <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-muted text-xs sm:text-sm">{tx.info}</td>}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -121,13 +121,13 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                     )}
                 </div>
 
-                {/* Footer */}
-                <div className="p-4 sm:p-6 border-t border-border-color bg-bg-secondary/30">
+                {/* Footer - Compact on mobile */}
+                <div className="p-3 sm:p-6 border-t border-border-color bg-bg-secondary/30">
                     <div className="flex items-center justify-between">
-                        <div className="text-sm text-text-muted">
+                        <div className="text-xs sm:text-sm text-text-muted">
                             Total: <span className="font-bold text-text-primary">{transactions.length}</span> transaksi
                         </div>
-                        <div className={cn("text-sm font-mono font-bold", colorClass)}>
+                        <div className={cn("text-xs sm:text-sm font-mono font-bold", colorClass)}>
                             {formatNumber(totalAmount)}
                         </div>
                     </div>
