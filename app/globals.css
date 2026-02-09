@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Anabel Pro (Zinc Dark Theme) */
+  /* Dark Theme (Default) */
   --color-bg-primary: #09090b;
   /* Zinc-950 */
   --color-bg-secondary: #18181b;
@@ -19,6 +19,27 @@
   --color-accent-green: #22c55e;
   --color-accent-red: #ef4444;
   --color-border-color: #27272a;
+}
+
+/* Light Theme */
+.light {
+  --color-bg-primary: #ffffff;
+  /* White */
+  --color-bg-secondary: #f4f4f5;
+  /* Zinc-100 */
+  --color-bg-tertiary: #e4e4e7;
+  /* Zinc-200 */
+  --color-text-primary: #18181b;
+  /* Zinc-900 */
+  --color-text-secondary: #52525b;
+  /* Zinc-600 */
+  --color-text-muted: #71717a;
+  /* Zinc-500 */
+  --color-accent-blue: #3b82f6;
+  --color-accent-yellow: #f59e0b;
+  --color-accent-green: #22c55e;
+  --color-accent-red: #ef4444;
+  --color-border-color: #e4e4e7;
 }
 
 @layer base {
@@ -40,6 +61,11 @@
 
   .card {
     @apply bg-bg-secondary rounded-lg p-5 border border-border-color shadow-sm transition-colors duration-200;
+  }
+
+  /* Remove shadow in light mode */
+  .light .card {
+    box-shadow: none !important;
   }
 
   .text-label {

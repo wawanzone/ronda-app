@@ -6,6 +6,7 @@ import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { InteractiveChart } from "@/components/dashboard/InteractiveChart";
 import { MonthlyBreakdown } from "@/components/dashboard/MonthlyBreakdown";
 import { TransactionModal } from "@/components/dashboard/TransactionModal";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Wallet, TrendingUp, TrendingDown, CreditCard, ChevronDown } from "lucide-react";
 
 interface DashboardClientProps {
@@ -103,8 +104,11 @@ export function DashboardClient({ data }: DashboardClientProps) {
                         </p>
                     </div>
 
-                    {/* Right Side: Global Year Dropdown */}
-                    <div className="flex items-center justify-end">
+                    {/* Right Side: Theme Toggle + Year Dropdown */}
+                    <div className="flex items-center justify-end gap-2">
+                        {/* Theme Toggle */}
+                        <ThemeToggle />
+
                         {/* Global Year Selector */}
                         <div className="relative group">
                             <select
