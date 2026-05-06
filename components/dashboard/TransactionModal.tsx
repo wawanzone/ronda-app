@@ -39,80 +39,82 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
         expense: {
             title: 'Detail Uang Keluar',
             column: 'uangKeluar' as keyof Transaction,
-            colorClass: 'text-accent-red'
+            colorClass: 'text-text-danger'
         },
         income: {
             title: 'Detail Uang Masuk',
             column: 'uangMasuk' as keyof Transaction,
-            colorClass: 'text-accent-green'
+            colorClass: 'text-text-success'
         },
         unpaid: {
             title: 'Detail Belum Disetor',
             column: 'belumDisetor' as keyof Transaction,
-            colorClass: 'text-accent-yellow'
+            colorClass: 'text-[#B08A4D]'
         },
+
     };
+
 
     const { title, column, colorClass } = config[type];
     const totalAmount = transactions.reduce((sum, tx) => sum + (tx[column] as number), 0);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-background-primary/80 backdrop-blur-md"
                 onClick={onClose}
             />
 
-            {/* Modal - Fullscreen on mobile, centered on desktop */}
-            <div className="relative bg-bg-primary border border-border-color rounded-t-2xl sm:rounded-2xl w-full sm:max-w-4xl h-full sm:h-auto sm:max-h-[80vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
-                {/* Header - Compact on mobile */}
-                <div className="flex items-center justify-between p-3 sm:p-6 border-b border-border-color">
+            {/* Modal */}
+            <div className="relative bg-background-primary border border-border-tertiary rounded-t-[var(--border-radius-lg)] sm:rounded-[var(--border-radius-lg)] w-full sm:max-w-4xl h-[90vh] sm:h-auto sm:max-h-[85vh] flex flex-col shadow-none animate-in slide-in-from-bottom duration-300">
+                {/* Header */}
+                <div className="flex items-center justify-between p-5 sm:p-8 border-b border-border-tertiary">
                     <div>
-                        <h2 className="text-lg sm:text-2xl font-bold text-text-primary">{title}</h2>
-                        <p className="text-xs sm:text-sm text-text-muted mt-0.5 sm:mt-1">Tahun {year} • {transactions.length} transaksi</p>
+                        <h2 className="text-xl font-medium text-text-primary">{title}</h2>
+                        <p className="text-xs text-text-secondary mt-1">Tahun {year} • {transactions.length} transaksi tercatat</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-bg-secondary rounded-lg transition-colors"
+                        className="p-2 hover:bg-background-secondary rounded-full transition-colors border border-border-tertiary"
                         aria-label="Close"
                     >
-                        <X className="w-5 h-5 text-text-muted" />
+                        <X className="w-4 h-4 text-text-secondary" />
                     </button>
                 </div>
 
-                {/* Content - Compact padding on mobile */}
-                <div className="flex-1 overflow-auto p-2 sm:p-6">
+                {/* Content */}
+                <div className="flex-1 overflow-auto p-0 sm:px-4">
                     {loading ? (
-                        <div className="flex items-center justify-center py-12">
-                            <div className="text-text-muted">Loading...</div>
+                        <div className="flex items-center justify-center py-20">
+                            <div className="text-text-secondary animate-pulse text-sm">Memuat data...</div>
                         </div>
                     ) : transactions.length === 0 ? (
-                        <div className="flex items-center justify-center py-12">
-                            <div className="text-text-muted">Tidak ada data transaksi</div>
+                        <div className="flex items-center justify-center py-20">
+                            <div className="text-text-secondary text-sm">Tidak ada riwayat transaksi ditemukan.</div>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto -mx-2 sm:mx-0">
-                            <table className="w-full text-sm min-w-max">
-                                <thead className="sticky top-0 bg-bg-secondary border-b border-border-color">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-[13px] min-w-max border-collapse">
+                                <thead className="sticky top-0 bg-background-primary/95 backdrop-blur-sm z-10 border-b border-border-tertiary">
                                     <tr className="text-left">
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Tanggal</th>
-                                        {type === 'unpaid' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Belum Disetor</th>}
-                                        {type === 'income' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Masuk</th>}
-                                        {type === 'expense' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider text-right">Uang Keluar</th>}
-                                        <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Keterangan</th>
-                                        {type === 'expense' && <th className="px-2 sm:px-3 py-2 sm:py-3 font-semibold text-text-muted text-xs uppercase tracking-wider">Info</th>}
+                                        <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary">Tanggal</th>
+                                        <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary text-right">
+                                            {type === 'unpaid' ? 'Belum Disetor' : type === 'income' ? 'Uang Masuk' : 'Uang Keluar'}
+                                        </th>
+                                        <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary">Keterangan</th>
+                                        {type === 'expense' && <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary">Info Tambahan</th>}
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-border-color/50">
+                                <tbody className="divide-y divide-border-tertiary/50">
                                     {transactions.map((tx, idx) => (
-                                        <tr key={idx} className="hover:bg-bg-secondary/50 transition-colors">
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-primary font-medium whitespace-nowrap text-xs sm:text-sm">{tx.tanggal}</td>
-                                            <td className={cn("px-2 sm:px-3 py-2 sm:py-3 font-mono text-right whitespace-nowrap text-xs sm:text-sm", colorClass)}>
+                                        <tr key={idx} className="hover:bg-background-secondary/40 transition-colors group">
+                                            <td className="px-5 sm:px-8 py-4 text-text-secondary group-hover:text-text-primary transition-colors">{tx.tanggal}</td>
+                                            <td className={cn("px-5 sm:px-8 py-4 font-medium text-right tabular-nums", colorClass)}>
                                                 {formatNumber(tx[column] as number)}
                                             </td>
-                                            <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-primary text-xs sm:text-sm">{tx.keterangan}</td>
-                                            {type === 'expense' && <td className="px-2 sm:px-3 py-2 sm:py-3 text-text-muted text-xs sm:text-sm">{tx.info}</td>}
+                                            <td className="px-5 sm:px-8 py-4 text-text-primary max-w-xs truncate">{tx.keterangan}</td>
+                                            {type === 'expense' && <td className="px-5 sm:px-8 py-4 text-text-secondary italic">{tx.info}</td>}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -121,14 +123,14 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                     )}
                 </div>
 
-                {/* Footer - Compact on mobile */}
-                <div className="p-3 sm:p-6 border-t border-border-color bg-bg-secondary/30">
+                {/* Footer */}
+                <div className="p-5 sm:p-8 border-t border-border-tertiary bg-background-secondary/50">
                     <div className="flex items-center justify-between">
-                        <div className="text-xs sm:text-sm text-text-muted">
-                            Total: <span className="font-bold text-text-primary">{transactions.length}</span> transaksi
+                        <div className="text-xs text-text-secondary uppercase tracking-widest font-medium">
+                            Ringkasan Total
                         </div>
-                        <div className={cn("text-xs sm:text-sm font-mono font-bold", colorClass)}>
-                            {formatNumber(totalAmount)}
+                        <div className={cn("text-lg font-medium tabular-nums", colorClass)}>
+                            Rp {formatNumber(totalAmount)}
                         </div>
                     </div>
                 </div>
@@ -136,3 +138,4 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
         </div>
     );
 }
+

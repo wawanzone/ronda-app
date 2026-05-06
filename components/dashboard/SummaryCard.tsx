@@ -14,25 +14,28 @@ export function SummaryCard({ title, amount, icon: Icon, className, iconClassNam
     return (
         <div
             className={cn(
-                "card flex flex-col",
-                onClick && "cursor-pointer hover:bg-bg-secondary/50 transition-colors active:scale-[0.98]",
+                "card flex flex-col group",
+                onClick && "cursor-pointer hover:bg-background-primary transition-all duration-200 active:scale-[0.99]",
                 className
             )}
             onClick={onClick}
         >
-            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <h3 className="text-label mb-0">{title}</h3>
-                <Icon className={cn("h-4 w-4 text-text-muted opacity-70", iconClassName)} />
+            <div className="flex flex-row items-center justify-between pb-3">
+                <span className="text-label">{title}</span>
+                <div className={cn("p-1.5 rounded-md bg-background-primary border border-border-tertiary", iconClassName)}>
+                    <Icon className="h-3.5 w-3.5 text-text-secondary opacity-80" />
+                </div>
             </div>
-            <div className="pt-2">
-                <div className="text-value text-lg sm:text-2xl tracking-tight">{formatCurrency(amount)}</div>
+            <div className="mt-auto">
+                <div className="text-value-large">{formatCurrency(amount)}</div>
                 {onClick && (
-                    <div className="text-xs text-accent-blue mt-2 flex items-center gap-0.5 font-medium">
+                    <div className="text-[13px] text-text-secondary mt-3 flex items-center gap-1 group-hover:text-text-primary transition-colors">
                         <span>Lihat Detail</span>
-                        <ChevronRight className="w-3 h-3" />
+                        <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                     </div>
                 )}
             </div>
         </div>
     );
 }
+
