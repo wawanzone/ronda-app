@@ -1,80 +1,128 @@
 @import "tailwindcss";
 
 @theme {
-  /* Dark Theme (Default) */
-  --color-bg-primary: #09090b;
-  /* Zinc-950 */
-  --color-bg-secondary: #18181b;
-  /* Zinc-900 */
-  --color-bg-tertiary: #27272a;
-  /* Zinc-800 */
-  --color-text-primary: #f4f4f5;
-  /* Zinc-100 */
-  --color-text-secondary: #a1a1aa;
-  /* Zinc-400 */
-  --color-text-muted: #71717a;
-  /* Zinc-500 */
-  --color-accent-blue: #3b82f6;
-  --color-accent-yellow: #f59e0b;
-  --color-accent-green: #22c55e;
-  --color-accent-red: #ef4444;
-  --color-border-color: #27272a;
+  /* Claude / Anthropic Design System Tokens */
+  --color-background-primary: var(--bg-primary);
+  --color-background-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-success: var(--text-success);
+  --color-text-danger: var(--text-danger);
+  --color-border-tertiary: var(--border-tertiary);
+  --color-accent: #CC785C;
+
+  --font-serif: var(--font-lora), "Lora", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
 }
 
-/* Light Theme */
+:root {
+  /* Default: Dark Mode (Claude 'Paper Dark' Aesthetic) */
+  --bg-primary: #171717;
+  --bg-secondary: #212121;
+  --text-primary: #E6E6E6;
+  --text-secondary: #999999;
+  --text-success: #34D399;
+  --text-danger: #F87171;
+  --border-tertiary: rgba(255, 255, 255, 0.08);
+}
+
 .light {
-  --color-bg-primary: #ffffff;
-  /* White */
-  --color-bg-secondary: #f4f4f5;
-  /* Zinc-100 */
-  --color-bg-tertiary: #e4e4e7;
-  /* Zinc-200 */
-  --color-text-primary: #18181b;
-  /* Zinc-900 */
-  --color-text-secondary: #52525b;
-  /* Zinc-600 */
-  --color-text-muted: #71717a;
-  /* Zinc-500 */
-  --color-accent-blue: #3b82f6;
-  --color-accent-yellow: #f59e0b;
-  --color-accent-green: #22c55e;
-  --color-accent-red: #ef4444;
-  --color-border-color: #e4e4e7;
+  /* Light Mode (Anthropic Signature Colors) */
+  --bg-primary: #FAF9F5;
+  --bg-secondary: #F0EEE6;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --text-success: #107B3E;
+  --text-danger: #C53030;
+  --border-tertiary: rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
   body {
-    @apply bg-bg-primary text-text-primary min-h-screen antialiased;
-    font-family: var(--font-inter);
+    @apply bg-background-primary text-text-primary min-h-screen antialiased;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-lora), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
   }
 }
 
 @layer components {
   .app-shell {
-    max-width: 1120px !important;
+    max-width: 1024px !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     width: 100%;
   }
 
-  .card {
-    @apply bg-bg-secondary rounded-lg p-5 border border-border-color shadow-sm transition-colors duration-200;
+  @media (min-width: 640px) {
+    .app-shell {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 
-  /* Remove shadow in light mode */
-  .light .card {
+  .card {
+    @apply bg-background-secondary rounded-[var(--border-radius-lg)] p-4 sm:p-6 transition-all duration-300;
+    border: 1px solid var(--color-border-tertiary);
     box-shadow: none !important;
   }
 
-  .text-label {
-    @apply text-[11px] uppercase tracking-widest text-text-muted font-semibold mb-1.5 opacity-60;
+  .btn-primary {
+    @apply px-4 py-2 bg-[#CC785C] text-white rounded-[var(--border-radius-md)] font-medium transition-all hover:opacity-90 active:scale-[0.98];
   }
 
-  .text-value {
-    @apply font-semibold text-text-primary;
+  .btn-secondary {
+    @apply px-4 py-2 bg-background-primary text-text-primary rounded-[var(--border-radius-md)] font-medium transition-all hover:bg-background-secondary active:scale-[0.98];
+    border: 1px solid var(--color-border-tertiary);
   }
+
+  .text-label {
+    @apply text-[13px] text-text-secondary font-normal mb-1;
+    font-family: var(--font-inter), sans-serif;
+  }
+
+  .text-value-large {
+    @apply text-xl sm:text-2xl font-medium text-text-primary tracking-tight;
+    font-family: var(--font-lora), serif;
+  }
+
+  /* Default Card Colors (Dark Mode) */
+  .card-sage { background-color: #222822 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
+  .card-sand { background-color: #282622 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
+  .card-clay { background-color: #282422 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
+  .card-sky  { background-color: #222528 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
+
+  /* Semantic Text Overrides for Summary Values */
+  .card-sage .text-value-large { color: #107B3E !important; }
+  .card-sand .text-value-large { color: #B08A4D !important; }
+  .card-clay .text-value-large { color: #C53030 !important; }
+  .card-sky .text-value-large  { color: var(--text-primary) !important; }
+
+  /* Dark Mode Semantic Text */
+  .dark .card-sage .text-value-large { color: #34D399 !important; }
+  .dark .card-sand .text-value-large { color: #FBBF24 !important; }
+  .dark .card-clay .text-value-large { color: #F87171 !important; }
+  .dark .card-sky .text-value-large  { color: #FFFFFF !important; }
+
+  /* Light Mode Overrides (Refined Anthropic Tints) */
+  .light .card-sage { background-color: #E5EAE5 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
+  .light .card-sand { background-color: #EBE8E0 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
+  .light .card-clay { background-color: #EBE3E0 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
+  .light .card-sky  { background-color: #E0E6EB !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
+
 
   /* Utility to hide scrollbars but keep functionality */
   .no-scrollbar::-webkit-scrollbar {

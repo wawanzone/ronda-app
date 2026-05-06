@@ -56,28 +56,22 @@ export function DashboardClient({ data }: DashboardClientProps) {
     }, [monthlyReport, selectedYear]);
 
     // determine Dynamic Summary Values
-    // Try to find exact summary from "Year Header" row (yearlySummaries)
-    // If not found, fallback to calculating from detailed monthly data, or default summary
     const dynamicSummary = useMemo(() => {
-        // 1. If looking at the latest year (Active Dashboard Year), use the B2-E2 parsing
-        // This ensures "Uang Belum Disetor", "Saldo", etc match the specific Year Tab
         if (selectedYear === availableYears[0]) {
             return defaultSummary;
         }
 
-        // 2. For historical years, try to find in YearlySummaries (from Laporan Bulanan headers)
         const exactMatch = yearlySummaries.find(s => s.year === selectedYear);
 
         if (exactMatch) {
             return {
-                uangBelumDisetor: exactMatch.unpaid, // Use scraped value 
+                uangBelumDisetor: exactMatch.unpaid,
                 uangMasuk: exactMatch.income,
                 uangKeluar: exactMatch.expense,
                 saldo: exactMatch.balance
             };
         }
 
-        // Fallback: Calculate from monthly data
         const income = filteredMonthlyData.reduce((acc, curr) => acc + curr.income, 0);
         const expense = filteredMonthlyData.reduce((acc, curr) => acc + curr.expense, 0);
 
@@ -85,104 +79,119 @@ export function DashboardClient({ data }: DashboardClientProps) {
             uangBelumDisetor: defaultSummary.uangBelumDisetor,
             uangMasuk: income,
             uangKeluar: expense,
-            saldo: income - expense // Heuristic
+            saldo: income - expense
         };
 
-    }, [yearlySummaries, selectedYear, filteredMonthlyData, defaultSummary]);
+    }, [yearlySummaries, selectedYear, filteredMonthlyData, defaultSummary, availableYears]);
 
     return (
-        <div className="app-shell pb-12 transition-all duration-300">
+        <div className="app-shell pb-12">
             {/* Header Section */}
-            <header className="py-4 sm:py-6 border-b border-border-color mb-6 sm:mb-8">
-                <div className="flex items-center justify-between gap-4">
-                    <div className="flex flex-col gap-0.5 sm:gap-1">
-                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-tight sm:leading-none">
-                            Ronda Pro
-                        </h1>
-                        <p className="text-text-muted text-[11px] sm:text-sm tracking-tight">
-                            Padon RT 03-04 RW 29
-                        </p>
-                    </div>
+            <header className="py-6 flex items-center justify-between gap-4 border-b border-border-tertiary mb-8">
+                <div className="flex flex-col">
+                    <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-text-primary">
+                        Ronda Pro
+                    </h1>
+                    <p className="text-text-secondary text-[12px] sm:text-sm hidden sm:block">
+                        Jimpitan Coin Padon RT 03-04 RW 29
+                    </p>
+                </div>
 
-                    {/* Right Side: Theme Toggle + Year Dropdown */}
-                    <div className="flex items-center justify-end gap-2">
-                        {/* Theme Toggle */}
-                        <ThemeToggle />
-
-                        {/* Global Year Selector */}
-                        <div className="relative group">
-                            <select
-                                value={selectedYear}
-                                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                                className="appearance-none bg-bg-secondary text-text-primary text-base font-bold uppercase tracking-wider border border-border-color rounded-lg pl-4 pr-10 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-text-muted/20 focus:border-text-muted cursor-pointer hover:bg-bg-tertiary transition-all"
-                            >
-                                {availableYears.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted group-hover:text-text-primary transition-colors pointer-events-none" />
-                        </div>
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <ThemeToggle />
+                    
+                    <div className="relative">
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(Number(e.target.value))}
+                            className="appearance-none bg-background-secondary text-text-primary text-sm font-medium border border-border-tertiary rounded-[var(--border-radius-md)] pl-3 pr-9 py-2 hover:bg-background-primary transition-colors cursor-pointer outline-none focus:border-text-secondary"
+                        >
+                            {availableYears.map((year) => (
+                                <option key={year} value={year}>
+                                    Tahun {year}
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary pointer-events-none" />
                     </div>
                 </div>
             </header>
 
-            <div className="space-y-6">
-                {/* Dynamic Summary Cards - Modified Layout for Saldo Prominence */}
-                {/* Desktop: 3 Top (1fr each), Saldo Bottom (Full Width) */}
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
-                    {/* Metric Cards */}
-                    <SummaryCard
-                        title="Belum Setor"
-                        amount={dynamicSummary.uangBelumDisetor}
-                        icon={Wallet}
-                        iconClassName="text-accent-yellow"
-                        onClick={() => handleTransactionClick('unpaid')}
-                    />
-                    <SummaryCard
-                        title="Uang Masuk"
-                        amount={dynamicSummary.uangMasuk}
-                        icon={TrendingUp}
-                        iconClassName="text-accent-green"
-                        onClick={() => handleTransactionClick('income')}
-                    />
-                    <SummaryCard
-                        title="Uang Keluar"
-                        amount={dynamicSummary.uangKeluar}
-                        icon={TrendingDown}
-                        iconClassName="text-accent-red"
-                        onClick={() => handleTransactionClick('expense')}
-                    />
-
-                    {/* Saldo - Wider (2 cols) & Prominent */}
-                    <div className="col-span-1 lg:col-span-2">
+            <div className="space-y-10">
+                {/* Summary Section */}
+                <section>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <SummaryCard
+                            title="Belum Setor"
+                            amount={dynamicSummary.uangBelumDisetor}
+                            icon={Wallet}
+                            className="card-sand"
+                            onClick={() => handleTransactionClick('unpaid')}
+                        />
+                        <SummaryCard
+                            title="Uang Masuk"
+                            amount={dynamicSummary.uangMasuk}
+                            icon={TrendingUp}
+                            className="card-sage"
+                            onClick={() => handleTransactionClick('income')}
+                        />
+                        <SummaryCard
+                            title="Uang Keluar"
+                            amount={dynamicSummary.uangKeluar}
+                            icon={TrendingDown}
+                            className="card-clay"
+                            onClick={() => handleTransactionClick('expense')}
+                        />
                         <SummaryCard
                             title="Saldo Akhir"
                             amount={dynamicSummary.saldo}
                             icon={CreditCard}
-                            iconClassName="text-accent-yellow"
-                            className="bg-accent-yellow/10 border-accent-yellow/20 h-full"
+                            className="card-sky"
                         />
                     </div>
-                </div>
+                </section>
 
-                {/* Charts Grid: Table (50%) + Chart (50%) - Equal Split */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-                    <div className="h-[500px] lg:h-auto">
+
+                {/* Analysis Section */}
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <h2 className="text-lg font-medium text-text-primary">Rincian Bulanan</h2>
+                            <span className="text-xs text-text-secondary">Tahun {selectedYear}</span>
+                        </div>
                         <MonthlyBreakdown data={filteredMonthlyData} year={selectedYear} />
                     </div>
-                    <div className="h-[300px] lg:h-auto order-first lg:order-last">
-                        <InteractiveChart data={filteredMonthlyData} />
+                    
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <h2 className="text-lg font-medium text-text-primary">Tren Keuangan</h2>
+                            <div className="flex items-center gap-4 text-[11px] text-text-secondary">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2 h-2 rounded-full bg-[#CC785C]" />
+                                    <span>Masuk</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2 h-2 rounded-full bg-text-secondary opacity-40" />
+                                    <span>Keluar</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card bg-background-primary p-6">
+                            <InteractiveChart data={filteredMonthlyData} />
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
 
             {/* Footer */}
-            <footer className="mt-12 py-6 border-t border-border-color text-center">
-                <p className="text-text-muted text-[11px] sm:text-sm tracking-tight lowercase">
-                    &copy; 2026 by @wawanzone
+            <footer className="mt-20 py-10 border-t border-border-tertiary flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-text-secondary text-xs">
+                    &copy; 2026 Ronda Pro Dashboard
                 </p>
+                <div className="flex items-center gap-4 text-xs text-text-secondary">
+                    <span className="opacity-50">Handcrafted by</span>
+                    <span className="font-medium text-text-primary">@wawanzone</span>
+                </div>
             </footer>
 
             {/* Transaction Modal */}
@@ -197,3 +206,4 @@ export function DashboardClient({ data }: DashboardClientProps) {
         </div>
     );
 }
+
