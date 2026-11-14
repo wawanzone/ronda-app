@@ -19,25 +19,24 @@ const parseCurrency = (value: string | undefined): number => {
     return parseFloat(str) || 0;
 };
 
-async function fetchCSV(sheetId: string, gid: string) {
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+async function fetchCSV(sheetId: string, year: string) {
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(year)}&headers=0`;
     try {
         const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.statusText}`);
         const text = await response.text();
         return Papa.parse(text, { header: false, skipEmptyLines: false }).data as string[][];
     } catch (error) {
-        console.error(`Error fetching CSV (GID: ${gid}):`, error);
-        return [];
+        throw error;
     }
 }
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const year = searchParams.get('year');
-    const type = searchParams.get('type') || 'expense'; // expense, income, unpaid
+    const type = searchParams.get('type') || 'expense'; // expense, income, unpaid, all
 
-    if (!year) {
+    if (!year || !/^20\d{2}$|^2100$/.test(year)) {
         return NextResponse.json({ error: 'Year parameter required' }, { status: 400 });
     }
 
@@ -46,16 +45,8 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Sheet ID not configured' }, { status: 500 });
     }
 
-    // Get year-specific GID from env
-    const gidKey = `GOOGLE_SHEET_${year}_GID`;
-    const gid = process.env[gidKey];
-
-    if (!gid) {
-        return NextResponse.json({ error: `GID for year ${year} not configured` }, { status: 404 });
-    }
-
     try {
-        const data = await fetchCSV(sheetId, gid);
+        const data = await fetchCSV(sheetId, year);
 
         // Parse rows 4-500 (index 3-499), filter based on type
         const transactions: Transaction[] = [];
@@ -63,14 +54,16 @@ export async function GET(request: NextRequest) {
         // Determine which column to filter by
         const filterColumnIndex = type === 'unpaid' ? 1 : type === 'income' ? 2 : 3;
 
-        for (let i = 3; i < Math.min(500, data.length); i++) {
+        for (let i = 4; i < data.length; i++) {
             const row = data[i];
             if (!row) continue;
 
-            const filterValue = parseCurrency(row[filterColumnIndex]);
+            const filterValue = type === 'all'
+                ? [row[1], row[2], row[3]].some((value) => parseCurrency(value) > 0)
+                : parseCurrency(row[filterColumnIndex]) > 0;
 
             // Filter: only include rows where the target column has content (amount > 0)
-            if (filterValue > 0) {
+            if (filterValue) {
                 transactions.push({
                     tanggal: row[0] || '',
                     belumDisetor: parseCurrency(row[1]),

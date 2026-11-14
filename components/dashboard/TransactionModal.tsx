@@ -1,7 +1,7 @@
 "use client";
 
 import { Transaction } from "@/types";
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +49,7 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
         unpaid: {
             title: 'Detail Belum Disetor',
             column: 'belumDisetor' as keyof Transaction,
-            colorClass: 'text-[#B08A4D]'
+            colorClass: 'text-[#f7c14a]'
         },
 
     };
@@ -57,6 +57,47 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
 
     const { title, column, colorClass } = config[type];
     const totalAmount = transactions.reduce((sum, tx) => sum + (tx[column] as number), 0);
+
+    const exportToXls = () => {
+        if (transactions.length === 0) return;
+
+        const escapeHtml = (value: string | number) => String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        const rows = transactions.map((tx) => `
+            <tr>
+                <td>${escapeHtml(tx.tanggal)}</td>
+                <td>${tx.belumDisetor}</td>
+                <td>${tx.uangMasuk}</td>
+                <td>${tx.uangKeluar}</td>
+                <td>${escapeHtml(tx.keterangan)}</td>
+                <td>${escapeHtml(tx.info)}</td>
+            </tr>`).join('');
+
+        const workbook = `<!DOCTYPE html>
+            <html><head><meta charset="UTF-8"></head><body>
+                <table border="1">
+                    <thead><tr>
+                        <th>Tanggal</th><th>Belum Disetor</th><th>Uang Masuk</th>
+                        <th>Uang Keluar</th><th>Keterangan</th><th>Info Tambahan</th>
+                    </tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </body></html>`;
+
+        const blob = new Blob([workbook], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `transaksi-${type}-${year}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -67,20 +108,30 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
             />
 
             {/* Modal */}
-            <div className="relative bg-background-primary border border-border-tertiary rounded-t-[var(--border-radius-lg)] sm:rounded-[var(--border-radius-lg)] w-full sm:max-w-4xl h-[90vh] sm:h-auto sm:max-h-[85vh] flex flex-col shadow-none animate-in slide-in-from-bottom duration-300">
+            <div className="relative bg-[#111113] border border-border-tertiary rounded-t-[var(--border-radius-lg)] sm:rounded-[var(--border-radius-lg)] w-full sm:max-w-4xl h-[90vh] sm:h-auto sm:max-h-[85vh] flex flex-col shadow-none animate-in slide-in-from-bottom duration-300">
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 sm:p-8 border-b border-border-tertiary">
                     <div>
                         <h2 className="text-xl font-medium text-text-primary">{title}</h2>
                         <p className="text-xs text-text-secondary mt-1">Tahun {year} • {transactions.length} transaksi tercatat</p>
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-background-secondary rounded-full transition-colors border border-border-tertiary"
-                        aria-label="Close"
-                    >
-                        <X className="w-4 h-4 text-text-secondary" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={exportToXls}
+                            disabled={loading || transactions.length === 0}
+                            className="inline-flex items-center gap-2 min-h-10 px-3 rounded-[var(--border-radius-md)] border border-[#63d8a3]/30 text-[#63d8a3] text-xs font-semibold hover:bg-[#63d8a3]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <Download className="w-4 h-4" />
+                            Export XLS
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="p-2 hover:bg-background-secondary rounded-full transition-colors border border-border-tertiary"
+                            aria-label="Close"
+                        >
+                            <X className="w-4 h-4 text-text-secondary" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -96,7 +147,7 @@ export function TransactionModal({ isOpen, onClose, transactions, year, loading,
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full text-[13px] min-w-max border-collapse">
-                                <thead className="sticky top-0 bg-background-primary/95 backdrop-blur-sm z-10 border-b border-border-tertiary">
+                                <thead className="sticky top-0 bg-[#111113]/95 backdrop-blur-sm z-10 border-b border-border-tertiary">
                                     <tr className="text-left">
                                         <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary">Tanggal</th>
                                         <th className="px-5 sm:px-8 py-4 font-medium text-text-secondary text-right">

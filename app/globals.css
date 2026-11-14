@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Claude / Anthropic Design System Tokens */
   --color-background-primary: var(--bg-primary);
   --color-background-secondary: var(--bg-secondary);
   --color-text-primary: var(--text-primary);
@@ -9,79 +8,82 @@
   --color-text-success: var(--text-success);
   --color-text-danger: var(--text-danger);
   --color-border-tertiary: var(--border-tertiary);
-  --color-accent: #CC785C;
+  --color-accent: #63d8a3;
 
-  --font-serif: var(--font-lora), "Lora", Georgia, serif;
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   
-  --border-radius-lg: 12px;
-  --border-radius-md: 8px;
+  --border-radius-lg: 18px;
+  --border-radius-md: 10px;
 }
 
 :root {
-  /* Default: Dark Mode (Claude 'Paper Dark' Aesthetic) */
-  --bg-primary: #171717;
-  --bg-secondary: #212121;
-  --text-primary: #E6E6E6;
-  --text-secondary: #999999;
-  --text-success: #34D399;
-  --text-danger: #F87171;
+  --bg-primary: #000000;
+  --bg-secondary: #111113;
+  --text-primary: #dedde4;
+  --text-secondary: #929199;
+  --text-success: #63d8a3;
+  --text-danger: #e5484d;
   --border-tertiary: rgba(255, 255, 255, 0.08);
 }
 
 .light {
   /* Light Mode (Anthropic Signature Colors) */
-  --bg-primary: #FAF9F5;
-  --bg-secondary: #F0EEE6;
-  --text-primary: #1A1A1A;
-  --text-secondary: #6B6B6B;
-  --text-success: #107B3E;
-  --text-danger: #C53030;
-  --border-tertiary: rgba(0, 0, 0, 0.05);
+  --bg-primary: #f7f9f2;
+  --bg-secondary: #e8efe2;
+  --text-primary: #142b22;
+  --text-secondary: #5e7468;
+  --text-success: #63d8a3;
+  --text-danger: #e5484d;
+  --border-tertiary: rgba(20, 43, 34, 0.15);
 }
 
 @layer base {
   body {
     @apply bg-background-primary text-text-primary min-h-screen antialiased;
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    background-color: #000000 !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
+    background-image: radial-gradient(circle at 8% 0%, rgba(197,230,120,.06), transparent 34rem);
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-lora), Georgia, serif;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.035em;
     color: var(--text-primary);
   }
 }
 
 @layer components {
   .app-shell {
-    max-width: 1024px !important;
+    max-width: 1180px !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
     width: 100%;
   }
 
   @media (min-width: 640px) {
     .app-shell {
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
     }
   }
 
   .card {
     @apply bg-background-secondary rounded-[var(--border-radius-lg)] p-4 sm:p-6 transition-all duration-300;
+    background-color: #111113 !important;
     border: 1px solid var(--color-border-tertiary);
-    box-shadow: none !important;
+    box-shadow: 0 20px 48px rgba(0,0,0,.18);
   }
 
   .btn-primary {
-    @apply px-4 py-2 bg-[#CC785C] text-white rounded-[var(--border-radius-md)] font-medium transition-all hover:opacity-90 active:scale-[0.98];
+    @apply px-4 py-2 bg-[#63d8a3] text-[#07110d] rounded-[var(--border-radius-md)] font-semibold transition-all hover:brightness-105 active:scale-[0.98];
   }
 
   .btn-secondary {
@@ -100,28 +102,28 @@
   }
 
   /* Default Card Colors (Dark Mode) */
-  .card-sage { background-color: #222822 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
-  .card-sand { background-color: #282622 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
-  .card-clay { background-color: #282422 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
-  .card-sky  { background-color: #222528 !important; border-color: rgba(255,255,255,0.03) !important; color: var(--text-primary) !important; }
+  .card-sage { background: #111113 !important; border-color: rgba(99,216,163,.10) !important; }
+  .card-sand { background: #111113 !important; border-color: rgba(247,193,74,.10) !important; }
+  .card-clay { background: #111113 !important; border-color: rgba(229,72,77,.18) !important; }
+  .card-sky  { background: #111113 !important; border-color: rgba(94,212,230,.10) !important; }
 
   /* Semantic Text Overrides for Summary Values */
-  .card-sage .text-value-large { color: #107B3E !important; }
-  .card-sand .text-value-large { color: #B08A4D !important; }
-  .card-clay .text-value-large { color: #C53030 !important; }
+  .card-sage .text-value-large { color: #63d8a3 !important; }
+  .card-sand .text-value-large { color: #f7c14a !important; }
+  .card-clay .text-value-large { color: #e5484d !important; }
   .card-sky .text-value-large  { color: var(--text-primary) !important; }
 
   /* Dark Mode Semantic Text */
-  .dark .card-sage .text-value-large { color: #34D399 !important; }
-  .dark .card-sand .text-value-large { color: #FBBF24 !important; }
-  .dark .card-clay .text-value-large { color: #F87171 !important; }
+  .dark .card-sage .text-value-large { color: #63d8a3 !important; }
+  .dark .card-sand .text-value-large { color: #f7c14a !important; }
+  .dark .card-clay .text-value-large { color: #e5484d !important; }
   .dark .card-sky .text-value-large  { color: #FFFFFF !important; }
 
   /* Light Mode Overrides (Refined Anthropic Tints) */
-  .light .card-sage { background-color: #E5EAE5 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
-  .light .card-sand { background-color: #EBE8E0 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
-  .light .card-clay { background-color: #EBE3E0 !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
-  .light .card-sky  { background-color: #E0E6EB !important; border-color: rgba(0,0,0,0.03) !important; color: var(--text-primary) !important; }
+  .light .card-sage { background: #e0f0d5 !important; }
+  .light .card-sand { background: #fff1c9 !important; }
+  .light .card-clay { background: #ffe0d7 !important; }
+  .light .card-sky  { background: #d9f0f3 !important; }
 
 
   /* Utility to hide scrollbars but keep functionality */
@@ -133,4 +135,9 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+@media (max-width: 639px) {
+  .app-shell { padding-left: 1rem; padding-right: 1rem; }
+  .card { border-radius: 14px; }
 }

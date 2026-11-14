@@ -18,17 +18,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         setMounted(true);
         // Load theme from localStorage
-        const savedTheme = localStorage.getItem("theme") as Theme | null;
+        const savedTheme = localStorage.getItem("ronda-theme-v2") as Theme | null;
         if (savedTheme) {
             setTheme(savedTheme);
             document.documentElement.classList.toggle("light", savedTheme === "light");
+        } else {
+            document.documentElement.classList.remove("light");
         }
     }, []);
 
     const toggleTheme = () => {
         const newTheme = theme === "dark" ? "light" : "dark";
         setTheme(newTheme);
-        localStorage.setItem("theme", newTheme);
+        localStorage.setItem("ronda-theme-v2", newTheme);
         document.documentElement.classList.toggle("light", newTheme === "light");
     };
 

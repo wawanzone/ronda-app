@@ -140,7 +140,7 @@ export async function getDashboardData(): Promise<DashboardData> {
                 }
 
                 // Only add if there is data (ignore empty rows placeholder)
-                if (income > 0 || expense > 0) {
+                if (currentYear > 0) {
                     monthRecords.push({
                         year: currentYear,
                         month: col0,

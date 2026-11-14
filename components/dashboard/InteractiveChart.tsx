@@ -8,6 +8,7 @@ import {
     Tooltip,
     XAxis,
     YAxis,
+    Line,
 } from "recharts";
 import { MonthlyRecord } from "@/types";
 import { formatCurrency } from "@/lib/utils";
@@ -56,17 +57,26 @@ export function InteractiveChart({ data }: InteractiveChartProps) {
                         <Bar 
                             dataKey="income" 
                             name="Pemasukan" 
-                            fill="#CC785C" 
+                            fill="#63d8a3"
                             radius={[1, 1, 0, 0]} 
                             barSize={8} 
                         />
                         <Bar 
                             dataKey="expense" 
                             name="Pengeluaran" 
-                            fill="var(--color-text-secondary)" 
-                            fillOpacity={0.15}
+                            fill="#e5484d"
+                            fillOpacity={0.8}
                             radius={[1, 1, 0, 0]} 
                             barSize={8} 
+                        />
+                        <Line
+                            type="monotone"
+                            dataKey="balance"
+                            name="Saldo akhir"
+                            stroke="#63d8a3"
+                            strokeWidth={2.5}
+                            dot={{ r: 3, fill: "#63d8a3", strokeWidth: 0 }}
+                            activeDot={{ r: 5, fill: "#63d8a3", stroke: "#000000", strokeWidth: 2 }}
                         />
 
                     </BarChart>
