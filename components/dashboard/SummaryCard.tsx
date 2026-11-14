@@ -19,6 +19,14 @@ export function SummaryCard({ title, amount, icon: Icon, className, iconClassNam
                 className
             )}
             onClick={onClick}
+            role={onClick ? 'button' : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            onKeyDown={onClick ? (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onClick();
+                }
+            } : undefined}
         >
             <div className="flex flex-row items-center justify-between pb-3">
                 <span className="text-label font-medium">{title}</span>
