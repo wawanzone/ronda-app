@@ -15,15 +15,16 @@ interface DashboardClientProps {
 
 export function DashboardClient({ data }: DashboardClientProps) {
     const { monthlyReport, yearlySummaries, summary: defaultSummary } = data;
+    const currentYear = Number(new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Jakarta' }).format(new Date()));
 
     // Extract Available Years from Monthly Report (Unique & Sorted Descending)
     const availableYears = useMemo(() => {
-        const years = Array.from(new Set(monthlyReport.map((d) => d.year)));
+        const years = Array.from(new Set([currentYear, ...yearlySummaries.map(d => d.year), ...monthlyReport.map(d => d.year)]));
         return years.sort((a, b) => b - a);
-    }, [monthlyReport]);
+    }, [monthlyReport, yearlySummaries, currentYear]);
 
     // State for Selected Year (Default to latest year available)
-    const [selectedYear, setSelectedYear] = useState<number>(availableYears[0] || new Date().getFullYear());
+    const [selectedYear, setSelectedYear] = useState<number>(currentYear);
 
     // State for Transaction Modal
     const [showTransactionModal, setShowTransactionModal] = useState(false);
@@ -98,7 +99,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
         const expense = filteredMonthlyData.reduce((acc, curr) => acc + curr.expense, 0);
 
         return {
-            uangBelumDisetor: defaultSummary.uangBelumDisetor,
+            uangBelumDisetor: 0,
             uangMasuk: income,
             uangKeluar: expense,
             saldo: income - expense
@@ -109,14 +110,14 @@ export function DashboardClient({ data }: DashboardClientProps) {
     return (
         <div className="app-shell pb-12">
             {/* Header Section */}
-            <header className="py-6 sm:py-8 flex items-center justify-between gap-4 border-b border-border-tertiary mb-8 sm:mb-10">
+            <header className="py-6 sm:py-8 flex flex-wrap items-center justify-between gap-4 border-b border-border-tertiary mb-8 sm:mb-10">
                 <div className="flex items-center gap-3 min-w-0">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] bg-[#63d8a3] text-[#07110d] flex items-center justify-center font-bold text-lg shadow-[0_8px_24px_rgba(99,216,163,.18)]">
                         R
                     </div>
                     <div className="flex flex-col min-w-0">
                     <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary truncate">
-                        Ronda <span className="text-[#63d8a3]">Kas</span>
+                        Ronda <span className="text-accent">Pro</span>
                     </h1>
                     <p className="text-text-secondary text-[11px] sm:text-sm truncate">
                         Padon RT 03–04 · RW 29
@@ -127,7 +128,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
                 <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={exportAnnualTransactions}
-                        className="hidden sm:inline-flex items-center gap-2 min-h-10 px-3 rounded-[var(--border-radius-md)] border border-[#63d8a3]/30 text-[#63d8a3] text-xs font-semibold hover:bg-[#63d8a3]/10 transition-colors"
+                        className="inline-flex items-center gap-2 min-h-10 px-3 rounded-[var(--border-radius-md)] border border-accent/30 text-accent text-xs font-semibold hover:bg-accent/10 transition-colors"
                     >
                         <Download className="w-4 h-4" />
                         Export tahunan
@@ -191,7 +192,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
                 <section className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-stretch">
                     <div className="space-y-4 flex flex-col">
                         <div className="flex items-center justify-between px-1">
-                            <h2 className="text-xl font-bold text-text-primary">Rincian bulanan</h2>
+                            <h2 className="text-lg font-bold text-text-primary">Rincian bulanan</h2>
                             <span className="text-xs text-text-secondary">Tahun {selectedYear}</span>
                         </div>
                         <MonthlyBreakdown data={filteredMonthlyData} year={selectedYear} />
@@ -199,7 +200,7 @@ export function DashboardClient({ data }: DashboardClientProps) {
                     
                     <div className="space-y-4 flex flex-col">
                         <div className="flex items-center justify-between px-1">
-                            <h2 className="text-lg font-semibold text-text-primary">Tren keuangan</h2>
+                            <h2 className="text-lg font-bold text-text-primary">Tren keuangan</h2>
                             <div className="flex items-center gap-4 text-[11px] text-text-secondary">
                                 <div className="flex items-center gap-1.5">
                                     <div className="w-3 h-0.5 bg-[#63d8a3]" />
@@ -210,12 +211,12 @@ export function DashboardClient({ data }: DashboardClientProps) {
                                     <span>Masuk</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <div className="w-2 h-2 rounded-full bg-text-secondary opacity-40" />
+                                    <div className="w-2 h-2 rounded-full bg-[#e5484d]" />
                                     <span>Keluar</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="card bg-background-primary p-5 sm:p-6 flex-1 flex items-center">
+                        <div className="card bg-background-primary p-5 sm:p-6 flex-1 flex min-h-[360px]">
                             <InteractiveChart data={filteredMonthlyData} />
                         </div>
                     </div>

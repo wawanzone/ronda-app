@@ -9,15 +9,15 @@ export function ThemeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className="relative flex items-center justify-center w-9 h-9 rounded-[var(--border-radius-md)] bg-background-secondary border border-border-tertiary hover:bg-background-primary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-text-secondary/10 group overflow-hidden"
-            aria-label="Toggle theme"
+            className="relative flex items-center justify-center w-11 h-11 rounded-[var(--border-radius-md)] bg-background-secondary border border-border-tertiary hover:bg-background-primary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-text-secondary/10 group overflow-hidden"
+            aria-label={theme === "dark" ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
         >
             {/* Sun Icon (Light Mode) */}
             <Sun
                 className={`absolute w-4.5 h-4.5 transition-all duration-500 ${theme === "light"
                         ? "translate-y-0 opacity-100 rotate-0"
                         : "translate-y-10 opacity-0 rotate-45"
-                    } text-[#63d8a3]`}
+                    } text-accent`}
             />
 
             {/* Moon Icon (Dark Mode) */}

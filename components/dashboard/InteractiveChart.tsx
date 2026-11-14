@@ -2,7 +2,7 @@
 
 import {
     Bar,
-    BarChart,
+    ComposedChart,
     CartesianGrid,
     ResponsiveContainer,
     Tooltip,
@@ -19,36 +19,38 @@ interface InteractiveChartProps {
 
 export function InteractiveChart({ data }: InteractiveChartProps) {
     return (
-        <div className="w-full h-[320px]">
+        <div className="w-full h-[320px] lg:h-full lg:min-h-[360px] min-w-0">
             {data.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data} barGap={6} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                    <ComposedChart data={data} barGap={6} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="var(--color-border-tertiary)" opacity={0.4} />
                         <XAxis
                             dataKey="month"
                             stroke="var(--color-text-secondary)"
-                            fontSize={11}
+                            fontSize={12}
                             tickLine={false}
                             axisLine={false}
                             dy={10}
-                            opacity={0.6}
+                            opacity={1}
                         />
                         <YAxis
+                            fontWeight={700}
                             stroke="var(--color-text-secondary)"
-                            fontSize={11}
+                            fontSize={12}
                             tickLine={false}
                             axisLine={false}
                             tickFormatter={(value) => `${value / 1000}k`}
-                            opacity={0.6}
+                            opacity={1}
                         />
                         <Tooltip
-                            formatter={(value: any) => [formatCurrency(value as number), ""]}
+                            formatter={(value, name) => [formatCurrency(Number(value)), name]}
                             contentStyle={{
                                 backgroundColor: "var(--color-background-primary)",
                                 borderColor: "var(--color-border-tertiary)",
                                 color: "var(--color-text-primary)",
                                 borderRadius: "var(--border-radius-md)",
                                 fontSize: "12px",
+                                fontWeight: 700,
                                 border: "0.5px solid var(--color-border-tertiary)",
                                 boxShadow: "none"
                             }}
@@ -79,7 +81,7 @@ export function InteractiveChart({ data }: InteractiveChartProps) {
                             activeDot={{ r: 5, fill: "#63d8a3", stroke: "#000000", strokeWidth: 2 }}
                         />
 
-                    </BarChart>
+                    </ComposedChart>
                 </ResponsiveContainer>
             ) : (
                 <div className="h-full flex items-center justify-center text-text-secondary text-sm">
