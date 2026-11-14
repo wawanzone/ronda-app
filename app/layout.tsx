@@ -1,18 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 
 export const metadata: Metadata = {
@@ -31,7 +19,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#1e293b",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -40,10 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${lora.variable} antialiased`}
-      >
+    <html lang="id">
+      <body className="antialiased">
         <ThemeProvider>
           {children}
         </ThemeProvider>

@@ -14,16 +14,16 @@ export function SummaryCard({ title, amount, icon: Icon, className, iconClassNam
     return (
         <div
             className={cn(
-                "card flex flex-col group",
-                onClick && "cursor-pointer hover:bg-background-primary transition-all duration-200 active:scale-[0.99]",
+                "card flex flex-col group min-h-[150px]",
+                onClick && "cursor-pointer hover:-translate-y-1 hover:border-[#63d8a3]/40 active:scale-[0.99]",
                 className
             )}
             onClick={onClick}
         >
             <div className="flex flex-row items-center justify-between pb-3">
-                <span className="text-label">{title}</span>
-                <div className={cn("p-1.5 rounded-md bg-background-primary border border-border-tertiary", iconClassName)}>
-                    <Icon className="h-3.5 w-3.5 text-text-secondary opacity-80" />
+                <span className="text-label font-medium">{title}</span>
+                <div className={cn("p-2 rounded-lg bg-background-primary/60 border border-border-tertiary", iconClassName)}>
+                    <Icon className="h-4 w-4 text-text-secondary opacity-90" />
                 </div>
             </div>
             <div className="mt-auto">

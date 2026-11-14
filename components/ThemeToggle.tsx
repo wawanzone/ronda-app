@@ -17,7 +17,7 @@ export function ThemeToggle() {
                 className={`absolute w-4.5 h-4.5 transition-all duration-500 ${theme === "light"
                         ? "translate-y-0 opacity-100 rotate-0"
                         : "translate-y-10 opacity-0 rotate-45"
-                    } text-[#CC785C]`}
+                    } text-[#63d8a3]`}
             />
 
             {/* Moon Icon (Dark Mode) */}
